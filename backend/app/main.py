@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 import traceback
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
@@ -33,8 +34,24 @@ async def lifespan(app: FastAPI):
     await create_tables()
     logger.info("Database tables created")
 
-    # Start device simulator
-    if settings.SIMULATOR_ENABLED:
+    # Auto-seed demo data if database is empty
+    try:
+        from app.database import async_session
+        from app.models import User
+        from sqlalchemy import select
+        async with async_session() as session:
+            result = await session.execute(select(User).limit(1))
+            if result.scalar_one_or_none() is None:
+                logger.info("Empty database detected, seeding demo data...")
+                from app.seed import seed as run_seed
+                await run_seed()
+                logger.info("Demo data seeded successfully")
+    except Exception as e:
+        logger.warning(f"Auto-seed skipped: {e}")
+
+    # Start device simulator (skip in serverless environments)
+    is_serverless = os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME")
+    if settings.SIMULATOR_ENABLED and not is_serverless:
         from app.simulator import run_simulator
         simulator_task = asyncio.create_task(
             run_simulator(settings.SIMULATOR_INTERVAL_SECONDS)
