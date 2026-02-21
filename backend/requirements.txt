@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+sqlalchemy[asyncio]
+aiosqlite
+passlib[bcrypt]
+python-jose[cryptography]
+pydantic-settings
+pydantic[email]
+python-multipart
+slowapi
+asyncpg
