@@ -2,7 +2,7 @@ services:
   - type: web
     name: sentinelai-backend
     runtime: python
-    repo: https://github.com/Buildathon26/Buildathon26-She-Codes
+    repo: https://github.com/bhargavithentu28/SentinelAI
     rootDir: backend
     plan: free
     buildCommand: pip install -r requirements.txt
