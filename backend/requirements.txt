@@ -3,6 +3,7 @@ uvicorn[standard]
 sqlalchemy[asyncio]
 aiosqlite
 passlib[bcrypt]
+bcrypt==4.0.1
 python-jose[cryptography]
 pydantic-settings
 pydantic[email]
