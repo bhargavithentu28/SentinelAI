@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: sentinelai-backend
+    runtime: python
+    repo: https://github.com/Buildathon26/Buildathon26-She-Codes
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: CORS_ORIGINS
+        value: "http://localhost:3000,http://localhost:3001,https://frontend-gray-rho-42.vercel.app,https://*.vercel.app"
+      - key: SECRET_KEY
+        value: sentinelai-production-secret-key-2024-change-me
+      - key: SIMULATOR_ENABLED
+        value: "true"
+      - key: SIMULATOR_INTERVAL_SECONDS
+        value: "30"
